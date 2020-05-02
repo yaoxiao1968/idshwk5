@@ -31,7 +31,7 @@ def initData(filename):
     with open(filename) as f:
         for line in f:
             line = line.strip()
-            if line.startwith('#') or ine == "":
+            if line.startwith('#') or line == "":
                 continue
             tokens = line.split(",")
             domain = tokens[0]
