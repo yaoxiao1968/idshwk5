@@ -1,12 +1,12 @@
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 
-def entropy(s):
+def entropy(s):    
     _, counts = np.unique(list(s), return_counts=True)
     total = sum(counts)
-    p = list(map(lambda x: x / total, counts))
-    return sum(-n * np.log(n) for n in p)
-
+    percent = list(map(lambda x: x / total, counts))
+    return sum(-n * np.log(n) for n in percent)
+    
 def processDomain(s):
     return len(s), sum(c.isdigit() for c in s), entropy(s)
 
@@ -15,7 +15,7 @@ class Domain:
         self.domain = _domain
         self.label = _label
         self.domainNameLength, self.domainNumberCount, self.letterEntropy = processDomain(self.domain)
-
+    
     def returnData(self):
         return [self.domainNameLength, self.domainNumberCount, self.letterEntropy]
 
@@ -31,7 +31,7 @@ def initData(filename):
     with open(filename) as f:
         for line in f:
             line = line.strip()
-            if line.startwith('#') or line == "":
+            if line == "":
                 continue
             tokens = line.split(",")
             domain = tokens[0]
@@ -51,7 +51,6 @@ if __name__ == '__main__':
     for domain in testDomains:
         domainNameLength, domainNumberCount, letterEntropy = processDomain(domain)
         testDomainFeatures.append([domainNameLength, domainNumberCount, letterEntropy])
-
     clf = RandomForestClassifier(random_state=0)
     clf.fit(featureMatrix, labelList)
     testLabels = clf.predict(testDomainFeatures)
